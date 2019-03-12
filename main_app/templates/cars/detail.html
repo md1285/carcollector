@@ -1,16 +1,77 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Car Details</h1>
-    <div class="card">
-        <div class="card-content">
-            <p>Year: {{ car.year }}</p>
-            <p>Make: {{ car.make }}</p>
-            <p>Style: {{ car.style }}</p>
-            <p>Color: {{ car.color }}</p>
-            <p>Engine: {{ car.engine }}</p>
-            <p>Driver: {{ car.driver }}</p>
+<div class="row">
+    <div class="col s6">
+        <h2 class="center-align">Car Details</h2>
+    </div>
+    <div class="col s6">
+        <h2 class="center-align">Fillups</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col s6">
+        <div class="card">
+            <div class="card-content">
+                <p>Year: {{ car.year }}</p>
+                <p>Make: {{ car.make }}</p>
+                <p>Style: {{ car.style }}</p>
+                <p>Color: {{ car.color }}</p>
+                <p>Engine: {{ car.engine }}</p>
+                <p>Driver: {{ car.driver }}</p>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'cars_update' car.id %}">Edit</a>
+                <a href="{% url 'cars_delete' car.id %}">Delete</a>
+            </div>
         </div>
     </div>
+    <div class="col s6">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Gas Station</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fillup in car.fillup_set.all %}
+                <tr>
+                    <td>{{fillup.date}}</td>
+                    <td>{{fillup.get_gas_station_display}}</td>
+                    <td>${{fillup.cost}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        {% if car.enough_fillups %}
+        <div class="card-panel teal-text center-align">This {{car.make}} {{car.style}} has enough gas.</div>
+        {% else %}
+        <div class="card-panel red-text center-align">This {{car.make}} {{car.style}} might need gas.</div>
+        {% endif %}
+
+        <form action="{% url 'add_fillup' car.id %}" method="POST">
+            {% csrf_token %}
+            {{ fillup_form.as_p }}
+            <input type="submit" class="btn" value="Add Fillup">
+        </form>
+    </div>
+</div>
+
+<script>
+    const dateEl = document.getElementById('id_date');
+    M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+    });
+
+    const stationEl = document.getElementById('id_gas_station');
+    M.FormSelect.init(stationEl);
+</script>
 
 {% endblock %}

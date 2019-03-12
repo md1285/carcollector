@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Delete Car</h1>
+
+<h4>Are you sure you want to delete this <span class="teal-text">{{ car.year }} {{ car.make }} {{ car.style }}</span>?</h4>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes - Delete!" class="btn red">
+  <a href="{% url 'detail' car.id %}">Cancel</a>
+</form>
+
+
+{% endblock %}

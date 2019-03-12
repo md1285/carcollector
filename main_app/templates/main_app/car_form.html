@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if car %}
+<h1>Edit <span class="red-text">{{car.year}} {{car.make}} {{car.style}}</span></h1>
+{% else %}
+<h1>Add car</h1>
+{% endif %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        {{form.as_table}}
+    </table>
+    <br>
+    <input type="submit" value="Submit" class="btn">
+</form>
+
+{% endblock %}
