@@ -8,6 +8,13 @@ GAS_STATIONS = (
     ('C', 'Chevron'),
 )
 
+class Driver(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return f'{self.name}'
+    def get_absolute_url(self):
+        return reverse('driver_detail', kwargs={'driver_id': self.id})
+
 
 # Create your models here.
 class Car(models.Model):
@@ -15,8 +22,8 @@ class Car(models.Model):
     engine = models.CharField(max_length=100)
     make = models.CharField(max_length=100)
     style = models.CharField(max_length=100)
-    driver = models.CharField(max_length=100)
     year = models.IntegerField()
+    drivers = models.ManyToManyField(Driver)
     def __str__(self):
         return f'{self.year} {self.make} {self.style}'
     def get_absolute_url(self):
